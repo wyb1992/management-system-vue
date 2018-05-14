@@ -12,7 +12,8 @@
     <el-table :data="tableData" v-loading.body="listLoading" element-loading-text="拼命加载中" border
               highlight-current-row>
       <tr v-for="col in cols">
-        <el-table-column :prop="col.prop" :label="col.label"></el-table-column>
+        <!--<el-table-column :prop="col.prop" :label="col.label"></el-table-column>-->
+        <el-table-column :prop="col.PROPERTY_NAME" :label="col.PROPERTY_FULLNAME"></el-table-column>
       </tr>
     </el-table>
     <el-pagination
@@ -29,7 +30,7 @@
       <el-form class="small-space" :model="tableData[0]" label-position="left" label-width="60px"
                style='width: 300px; margin-left:50px;'>
         <tr v-for="col in cols">
-          <el-form-item :label="col.label">
+          <el-form-item :label="col.PROPERTY_FULLNAME">
             <el-input type="text" v-model="tableData[1].companyId">
             </el-input>
           </el-form-item>
@@ -67,49 +68,72 @@
           id: "",
           content: ""
         },
-        cols: [
-          {label: '公司', prop: 'companyId'},
-          {label: '公司名称', prop: 'name'},
-          {label: '公司地址', prop: 'address'},
-          {label: 'slogan', prop: 'slogan',},
-          {label: '管理', prop: 'manager',}
-          ],
-      tableData:[{
-          companyId: '111',
-          name: ' 小满装饰',
-          address: '上海市杨浦区',
-          slogan: '用心做装修'
-        }, {
-          companyId: '2222',
-          name: '日晨装饰',
-          address: '上海市虹口区',
-          slogan: '装修，我们是专业的'
-        }, {
-          companyId: '3333',
-          name: '小王装饰',
-          address: '河南省许昌市',
-          slogan: '专业装修专业装修专业装修专业装修专业装修'
-        }]
+        cols: [],
+        tableData:[]
+//        cols: [
+//          {label: '公司', prop: 'companyId'},
+//          {label: '公司名称', prop: 'name'},
+//          {label: '公司地址', prop: 'address'},
+//          {label: 'slogan', prop: 'slogan',},
+//          {label: '管理', prop: 'manager',}
+//          ],
+//      tableData:[{
+//          companyId: '111',
+//          name: ' 小满装饰',
+//          address: '上海市杨浦区',
+//          slogan: '用心做装修'
+//        }, {
+//          companyId: '2222',
+//          name: '日晨装饰',
+//          address: '上海市虹口区',
+//          slogan: '装修，我们是专业的'
+//        }, {
+//          companyId: '3333',
+//          name: '小王装饰',
+//          address: '河南省许昌市',
+//          slogan: '专业装修专业装修专业装修专业装修专业装修'
+//        }]
       }
     },
     created() {
       this.getList();
+      this.dataList();
     },
     methods: {
       getList() {
         //查询列表
-        if (!this.hasPerm('article:list')) {
-          return
-        }
+//        if (!this.hasPerm('article:list')) {
+//          return
+//        }
         this.listLoading = true;
         this.api({
-          url: "/article/listArticle",
+          url: "/table/property",
           method: "get",
-          params: this.listQuery
+          params: {
+            objectId: 40
+          }
         }).then(data => {
           this.listLoading = false;
-          this.list = data.list;
-          this.totalCount = data.totalCount;
+          this.cols = data.list;
+          this.totalCount = 10;
+//          this.totalCount = data.totalCount;
+        })
+      },
+      dataList() {
+        this.listLoading = true;
+        this.api({
+          url: "/table/data",
+          method: "get",
+          params: {
+            objectId: 40,
+            pageNum: 0,//页码
+            pageRow: 20,//每页条数
+          }
+        }).then(data => {
+          this.listLoading = false;
+          this.tableData = data.list;
+          this.totalCount = 20;
+//          this.totalCount = data.totalCount;
         })
       },
       handleSizeChange(val) {
