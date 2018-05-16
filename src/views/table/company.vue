@@ -31,7 +31,7 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">取 消</el-button>
-        <el-button type="primary" @click="updateArticle">修 改</el-button>
+        <el-button type="primary" @click="updateData">修 改</el-button>
       </div>
     </el-dialog>
   </div>
@@ -51,14 +51,6 @@
           name: ''
         },
         dialogFormVisible: false,
-        textMap: {
-          update: '编辑',
-          create: '修改数据'
-        },
-        tempArticle: {
-          id: "",
-          content: ""
-        },
         cols: [],
         tableData: [],
         detail: {}
@@ -121,22 +113,25 @@
       },
       showUpdate(detail) {
         //显示新增对话框
-        this.tempArticle.content = "";
         this.dialogStatus = "update";
         this.dialogFormVisible = true;
         console.log(detail)
         this.detail = detail;
       },
-      updateArticle() {
-        //修改文章
-        this.api({
-          url: "/article/updateArticle",
-          method: "post",
-          data: this.tempArticle
-        }).then(() => {
-          this.getList();
-          this.dialogFormVisible = false
-        })
+      updateData() {
+        console.log(this.detail)
+
+        this.getList();
+        this.dialogFormVisible = false
+        //修改数据
+//        this.api({
+//          url: "/table/updateDetail",
+//          method: "post",
+//          data: this.detail
+//        }).then(() => {
+//          this.getList();
+//          this.dialogFormVisible = false
+//        })
       },
     }
   }
